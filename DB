@@ -1,0 +1,100 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema bienesraices_crud
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema bienesraices_crud
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `bienesraices_crud` DEFAULT CHARACTER SET utf8 ;
+USE `bienesraices_crud` ;
+
+-- -----------------------------------------------------
+-- Table `bienesraices_crud`.`clientes`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bienesraices_crud`.`clientes` (
+  `idcliente` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NULL,
+  `apellido` VARCHAR(45) NULL,
+  `email` VARCHAR(45) NULL,
+  `telefono` VARCHAR(45) NULL,
+  `direccion` VARCHAR(45) NULL,
+  `fecharegistro` VARCHAR(45) NULL,
+  PRIMARY KEY (`idcliente`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bienesraices_crud`.`vendedores`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bienesraices_crud`.`vendedores` (
+  `idvendedores` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NULL,
+  `apellido` VARCHAR(45) NULL,
+  `telefono` VARCHAR(10) NULL,
+  `vendedorescol` VARCHAR(45) NULL,
+  `clientes_idclientes` INT NOT NULL,
+  PRIMARY KEY (`idvendedores`),
+  INDEX `fk_vendedores_clientes1_idx` (`clientes_idclientes` ASC) VISIBLE,
+  CONSTRAINT `fk_vendedores_clientes1`
+    FOREIGN KEY (`clientes_idclientes`)
+    REFERENCES `bienesraices_crud`.`clientes` (`idcliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bienesraices_crud`.`propiedades`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bienesraices_crud`.`propiedades` (
+  `idpropiedades` INT(11) NOT NULL,
+  `titulo` VARCHAR(45) NULL,
+  `precio` DECIMAL(10,2) NULL,
+  `imagen` VARCHAR(200) NULL,
+  `descripcion` LONGTEXT NULL,
+  `habitaciones` INT(1) NULL,
+  `br` INT NULL,
+  `parqueos` INT(1) NULL,
+  `creado` DATE NULL,
+  `vendedores_idvendedores` INT NOT NULL,
+  PRIMARY KEY (`idpropiedades`),
+  INDEX `fk_propiedades_vendedores_idx` (`vendedores_idvendedores` ASC) VISIBLE,
+  CONSTRAINT `fk_propiedades_vendedores`
+    FOREIGN KEY (`vendedores_idvendedores`)
+    REFERENCES `bienesraices_crud`.`vendedores` (`idvendedores`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `bienesraices_crud`.`citas`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `bienesraices_crud`.`citas` (
+  `idcitas` INT NOT NULL AUTO_INCREMENT,
+  `fecha` DATE NULL,
+  `horacita` TIME NULL,
+  `idpropiedades` VARCHAR(45) NULL,
+  `idcliente` VARCHAR(45) NULL,
+  `idvendedores` VARCHAR(45) NULL,
+  `detalles` VARCHAR(45) NULL,
+  `propiedades_idpropiedades` INT(11) NOT NULL,
+  PRIMARY KEY (`idcitas`),
+  INDEX `fk_citas_propiedades1_idx` (`propiedades_idpropiedades` ASC) VISIBLE,
+  CONSTRAINT `fk_citas_propiedades1`
+    FOREIGN KEY (`propiedades_idpropiedades`)
+    REFERENCES `bienesraices_crud`.`propiedades` (`idpropiedades`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
